@@ -8,7 +8,8 @@ convertsens = [2*10**-9, 5*10**-9, 10*10**-9, 20*10**-9, 50*10**-9, 100*10**-9, 
 #Wraps the functions of the multimeter into easy to understand commands.
 
 def multimeter_voltage():
-	multimeter.write('MEAS:VOLT:DC? 10,0.003')
+	"""Measures the voltage of the multimeter. The range is from -2 V to 2 V and also measures up to the microvolt."""
+	multimeter.write('MEAS:VOLT:DC? 2,1E-6')
 	
 #Wraps the functions of the lock-in into easy to understand commands.
 def lockin_phase(n):
@@ -25,7 +26,7 @@ def lockin_autosensitivity():
 	while True:
 		currentsens = lockin.ask_for_values('SENS?')
 		voltage = lockin.ask_for_values('OUTP ? 3')
-		if voltage[0]/convertsens[int(currentsens[0])] > 0.8:
+		if voltage[0]/convertsens[int(currentsens[0])] > 0.8 and currentsens[0] < 26:
 			lockin.write('SENS ' + str(int(currentsens[0]) + 1))
 		else: break 
 
