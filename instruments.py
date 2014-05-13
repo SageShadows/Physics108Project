@@ -16,6 +16,7 @@ def lockin_phase(n):
 	lockin.write('PHAS ' + str(n))
 
 def lockin_timeconstant(n):
+	"""Sets the time constant of the lock-in. Consult the lock-in manual for the appropriate integer value for time constant"""
 	lockin.write('OFLT ' + str(n))
 
 def lockin_autosensitivity():
@@ -29,6 +30,7 @@ def lockin_autosensitivity():
 		else: break 
 
 def lockin_measurement():
+	"""Returns a single measurement point of voltage and phase shift"""
 	return lockin.ask_for_values('SNAP ? 3,4')
 	
 
