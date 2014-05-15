@@ -1,20 +1,26 @@
 import visa
 
-#Initializes the lock-in information. 
+#Initializes the lock-in information. Check the GPIB addresses! 
 rm = visa.ResourceManager()
-multimeter = rm.get_instrument('GPIB0::2')
+diodemultimeter = rm.get_instrument('GPIB0::2')
+feedbackmultimeter = rm.get_instrument('GPIB0::3')
 lockin = rm.get_instrument('GPIB0::6')
 keithley = rm.get_instrument('GPIB0::24')
 convertsens = [2*10**-9, 5*10**-9, 10*10**-9, 20*10**-9, 50*10**-9, 100*10**-9, 200*10**-9, 500*10**-9, 1*10**-6, 2*10**-6, 5*10**-6, 10*10**-6, 20*10**-6, 50*10**-6, 100*10**-6, 200*10**-6, 500*10**-6, 1*10**-3, 2*10**-3, 5*10**-3, 10*10**-3, 20*10**-3, 50*10**-3, 100*10**-3, 200*10**-3, 500*10**-3, 1];
 
-#Wraps the functions of the multimeter into easy to understand commands.
-def multimeter_voltage():
+#Wraps the functions of the diode multimeter into easy to understand commands.
+def diodemultimeter_voltage():
 	"""Measures the voltage of the multimeter. The range is from -2 V to 2 V and also measures up to 10 microvolts."""
-	return multimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
+	return diodemultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
 	
+#Wraps the functions of the feedback multimeter into easy to understand commands.
+def feedbackmultimeter_voltage():
+	"""Measures the voltage of the multimeter. The range is from -2 V to 2 V and also measures up to 10 microvolts."""
+	return feedbackmultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
+
 #Wraps the functions of the lock-in into easy to understand commands.
 def lockin_phase(phase):
-	"""Sets the phase offset of the lock-in. -360.00 < phase < 729.99 in degrees"""
+	"""Sets the phase offset of the lock-in. -360.00 < phase < 719.99 in degrees"""
 	lockin.write('PHAS ' + str(phase))
 
 def lockin_timeconstant(n):
@@ -42,20 +48,3 @@ def keithley_setvoltage(volt):
 	keithley.write(':SOUR:VOLT:MODE FIXED')
 	keithley.write(':SOUR:VOLT:RANG 1')
 	keithley.write(':SOUR:VOLT:LEV ' + str(volt))
-
-def keithley_readvoltage():
-	"""Reads the voltage from the Keithley in volts. Currently not working as intended."""
-	keithley.write(':SENS:FUNC "VOLT"')
-	keithley.write('FORM:ELEM VOLT')
-	keithley.write(':OUTP ON')
-	voltage = keithley.ask_for_values(':READ?')
-	keithley.write(':OUTP OFF')
-	return voltage[0]
-			
-
-
-
-
-
-	
-
