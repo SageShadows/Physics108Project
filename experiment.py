@@ -23,7 +23,7 @@ def recordData(minTemp, maxTemp, tempInterval, filename, phaseShift = 0, timeCon
 		while True: 
 			time.sleep(5)
 			feedbackvolt = feedbackmultimeter_voltage()
-			if abs(feedbackvolt) > tolerance: counter = counter + 1
+			if abs(feedbackvolt) < tolerance: counter = counter + 1
 			else: counter = 0
 			if counter == 5: break
 		print "Thermal drift stabilized to " + str(tolerance) + " V."
