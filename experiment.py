@@ -25,6 +25,7 @@ def recordData(minTemp, maxTemp, tempInterval, filename, phaseShift = 0, timeCon
 			feedbackvolt = feedbackmultimeter_voltage()
 			if abs(feedbackvolt) < tolerance: counter = counter + 1
 			else: counter = 0
+			print str(feedbackvolt) + " is the current feedback voltage. " + str(counter) + " is the current counter number."
 			if counter == 5: break
 		print "Thermal drift stabilized to " + str(tolerance) + " V."
 		instruments.lockin_autosensitivity()
@@ -34,10 +35,12 @@ def recordData(minTemp, maxTemp, tempInterval, filename, phaseShift = 0, timeCon
 	saveFile(filename, data)
 
 def initializeExperiment(phaseShift, timeConstant):
+	"""Initializes the experiment by setting the phase shift and the time constant of the lock-in"""
 	instruments.lockin_phase(phaseShift)
 	instruments.lockin_timeconstant(timeConstant)
 
 def saveFile(filename, data):
+	"""Saves data to a given filename to the path specified in the beginning of this script."""
 	completeName = os.path.join(savepath, filename + ".txt")         
 	f1 = open(completeName, "w")
 	for i in data:
