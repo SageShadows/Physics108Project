@@ -19,15 +19,7 @@ def recordData(minTemp, maxTemp, tempInterval, filename, phaseShift = 0, timeCon
 	for i in np.linspace(minTemp, maxTemp, (maxTemp - minTemp)/tempInterval + 1):
 		refvolt = temptovolt(i);
 		instruments.keithley_setvoltage(refvolt)
-		counter = 0
-		while True: 
-			time.sleep(5)
-			feedbackvolt = feedbackmultimeter_voltage()
-			if abs(feedbackvolt) < tolerance: counter = counter + 1
-			else: counter = 0
-			print str(feedbackvolt) + " is the current feedback voltage. " + str(counter) + " is the current counter number."
-			if counter == 5: break
-		print "Thermal drift stabilized to " + str(tolerance) + " V."
+		thermalEq()
 		instruments.lockin_autosensitivity()
 		datapoint = instruments.lockin_measurement()
 		actualtemp = volttotemp(instruments.diodemultimeter_voltage())
@@ -38,6 +30,17 @@ def initializeExperiment(phaseShift, timeConstant):
 	"""Initializes the experiment by setting the phase shift and the time constant of the lock-in"""
 	instruments.lockin_phase(phaseShift)
 	instruments.lockin_timeconstant(timeConstant)
+
+def thermalEq(): 
+	counter = 0
+	while True: 
+		time.sleep(5)
+		feedbackvolt = instruments.feedbackmultimeter_voltage()
+		if abs(feedbackvolt) < tolerance: counter = counter + 1
+		else: counter = 0
+		print str(feedbackvolt) + " is the current feedback voltage. " + str(counter) + " is the current counter number."
+		if counter == 5: break
+	print "Thermal drift stabilized to " + str(tolerance) + " V."
 
 def saveFile(filename, data):
 	"""Saves data to a given filename to the path specified in the beginning of this script."""
