@@ -7,10 +7,10 @@ import instruments
 import os.path
 
 #Definitions of various mathematical functions and constants.
-temptovolt = lambda x: -0.0018*x+1.167 #Converts temperature to voltage. Not implemented yet. 
-volttotemp = lambda y: -555.4*y+648 #Converts voltage to temperature. Not implemented yet. 
-#temptovolttest = lambda x: -0.002296*x+1.248 #function for 300K range
-#volttotemptest = lambda y: -435.6*y+543.7 #function for 300K range
+temptovolt = lambda x: -0.0018*x+1.167 #Converts temperature to voltage for LN2 range.  
+volttotemp = lambda y: -555.4*y+648 #Converts voltage to temperature for LN2 range.  
+#temptovolt = lambda x: -0.002296*x+1.248 #Converts temperature to voltage for 300K range
+#volttotemp = lambda y: -435.6*y+543.7 #Converts voltage to temperature for 300K range
 tolerance = 0.01 #Tolerance in volts. 
 savepath = 'C:\\Users\\David\\Desktop\\Dropbox\\School Work\\2013-2014\\Spring 2014\\PHYSICS 108'
 
