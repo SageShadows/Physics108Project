@@ -11,12 +11,14 @@ convertsens = [2*10**-9, 5*10**-9, 10*10**-9, 20*10**-9, 50*10**-9, 100*10**-9, 
 #Wraps the functions of the diode multimeter into easy to understand commands.
 def diodemultimeter_voltage():
 	"""Measures the voltage of the multimeter. The range is from -2 V to 2 V and also measures up to 10 microvolts."""
-	return diodemultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
-	
+	res = diodemultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
+	return res[0]
+
 #Wraps the functions of the feedback multimeter into easy to understand commands.
 def feedbackmultimeter_voltage():
 	"""Measures the voltage of the multimeter. The range is from -2 V to 2 V and also measures up to 10 microvolts."""
-	return feedbackmultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
+	res = feedbackmultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
+	return res[0]
 
 #Wraps the functions of the lock-in into easy to understand commands.
 def lockin_phase(phase):
@@ -48,3 +50,4 @@ def keithley_setvoltage(volt):
 	keithley.write(':SOUR:VOLT:MODE FIXED')
 	keithley.write(':SOUR:VOLT:RANG 1')
 	keithley.write(':SOUR:VOLT:LEV ' + str(volt))
+	keithley.write(':SENS:CURR:PROT 0.5E-3')
