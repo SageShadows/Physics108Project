@@ -11,6 +11,7 @@ import os.path
 # volttotemp = lambda y: -555.4*y+648 #Converts voltage to temperature for LN2 range.  
 temptovolt = lambda x: -0.002296*x+1.248 #Converts temperature to voltage for 300K range
 volttotemp = lambda y: -435.6*y+543.7 #Converts voltage to temperature for 300K range
+temperror  = lambda z: 0.06339902*(1+1/8+((z-1.0121275)**2)/0.00059121) #error on temperature as function of voltage in LN2 range
 tolerance = 0.1 #Tolerance in volts. 
 savepath = 'C:\\Users\\David\\Desktop\\Dropbox\\School Work\\2013-2014\\Spring 2014\\PHYSICS 108'
 
@@ -20,6 +21,9 @@ def recordData(minTemp, maxTemp, tempInterval, filename, phaseShift = 0, timeCon
 	data = [['Temperature','Voltage','Phase']]
 	for temp in np.linspace(minTemp, maxTemp, (maxTemp - minTemp)/tempInterval + 1):
 		thermalEq(temp)
+		#loop to record temperature + error for 5 seconds every 0.01 second (or as fast as possible)
+		#after loop, one lock-in measurement
+		#write above to data file
 		instruments.lockin_autosensitivity()
 		datapoint = instruments.lockin_measurement()
 		actualtemp = volttotemp(-1*instruments.diodemultimeter_voltage())
@@ -44,9 +48,7 @@ def thermalEq(temp):
 		print str(feedbackvolt) + " is the current feedback voltage. " + str(counter) + " is the current counter number."
 		if counter == 25: break #better convergence criterion
 	print "Thermal drift stabilized to " + str(tolerance) + " V."
-	#loop to record temperature + error for 5 seconds every 0.01 second (or as fast as possible)
-	#after loop, one lock-in measurement
-	#write above to data file
+	
 
 def saveFile(filename, data):
 	"""Saves data to a given filename to the path specified in the beginning of this script."""
