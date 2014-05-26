@@ -37,13 +37,16 @@ def thermalEq(temp):
 	instruments.keithley_setvoltage(refvolt)
 	counter = 0
 	while True: 
-		time.sleep(5)
+		time.sleep(1) #higher resolution
 		feedbackvolt = instruments.feedbackmultimeter_voltage()
 		if abs(feedbackvolt) < tolerance: counter = counter + 1
 		else: counter = 0
 		print str(feedbackvolt) + " is the current feedback voltage. " + str(counter) + " is the current counter number."
-		if counter == 5: break
+		if counter == 25: break #better convergence criterion
 	print "Thermal drift stabilized to " + str(tolerance) + " V."
+	#loop to record temperature + error for 5 seconds every 0.01 second (or as fast as possible)
+	#after loop, one lock-in measurement
+	#write above to data file
 
 def saveFile(filename, data):
 	"""Saves data to a given filename to the path specified in the beginning of this script."""
