@@ -5,6 +5,7 @@ import sys
 sys.path.append('C:\Users\David\Desktop\Dropbox\School Work\Physics108Project')
 import instruments
 import os.path
+import datetime
 
 #Definitions of various mathematical functions and constants.
 temptovolt = lambda x: -0.0018*x+1.167 #Converts temperature to voltage for LN2 range.  
@@ -15,6 +16,27 @@ temperror  = lambda z: 0.06339902*(1+1/8+((z-1.0121275)**2)/0.00059121) #error o
 tolerance = 0.01 #Tolerance in volts. 
 thermalLoopConstant = 60 #Number of times we loop for the thermal error check. 
 savepath = 'C:\\Users\\David\\Desktop\\Dropbox\\School Work\\2013-2014\\Spring 2014\\PHYSICS 108'
+
+def recordDataSimple(filename, phaseShift = 0, timeConstant = 7):
+	initializeExperiment(phaseShift, timeConstant)
+	data = ['Time','Temperature', 'TempError','Voltage','Phase', 'Solenoid Voltage']
+	completeName = os.path.join(savepath, filename + ".txt")         
+	f1 = open(completeName, "w")
+	while(True):
+		f1.write(str(data[0]) + "," + str(data[1]) + "," + str(data[2]) + "," + str(data[3]) + "," + str(data[4]) + str(data[5]) + "\n")
+		TempVoltage = ((-1)*instruments.diodemultimeter_voltage())
+		instruments.lockin_autosensitivity()
+		datapoint = instruments.lockin_measurement()
+		data[0] = datetime.datetime.now()
+		data[1] = volttotemp(TempVoltage)
+		data[2] = temperror(TempVoltage)
+		data[3] = datapoint[0]
+		data[4] = datapoint[1]
+		data[5] = instruments.feedbackmultimeter_ACVoltage()
+		if data[1] > 100:
+			break
+	f1.close()
+
 
 def recordData(minTemp, maxTemp, tempInterval, filename, phaseShift = 0, timeConstant = 11): 
 	""""Temperatures are given in Kelvin. The filename is a string that the data will be saved to. The phase shift is expermentially defined"""
