@@ -20,6 +20,11 @@ def feedbackmultimeter_voltage():
 	res = feedbackmultimeter.ask_for_values('MEAS:VOLT:DC? 2,1E-5')
 	return res[0]
 
+def feedbackmultimeter_ACVoltage():
+	"""Measures the AC voltage of the multimeter. The range is from -5 V to 5 V and also measures up to 10 microvolts."""
+	res = feedbackmultimeter.ask_for_values('MEAS:VOLT:AC? 5,1E-5')
+	return res[0]
+
 #Wraps the functions of the lock-in into easy to understand commands.
 def lockin_phase(phase):
 	"""Sets the phase offset of the lock-in. -360.00 < phase < 719.99 in degrees"""
